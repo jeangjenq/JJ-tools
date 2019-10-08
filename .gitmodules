@@ -1,0 +1,3 @@
+[submodule "ffmpeg_write"]
+	path = ffmpeg_write
+	url = https://github.com/jeangjenq/ffmpeg_write.git
