@@ -4,3 +4,6 @@
 [submodule "setProjDir"]
 	path = setProjDir
 	url = https://github.com/jeangjenq/setProjDir.git
+[submodule "read_tools"]
+	path = read_tools
+	url = https://github.com/jeangjenq/read_tools.git
