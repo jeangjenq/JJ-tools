@@ -16,8 +16,8 @@ def CMDexecute():
         thds += str(n) + " "
 
     #Check if selected node is executable
-    if Nwrite.Class() not in ['Write', 'DeepWrite', 'WriteGeo', 'WriteTank', 'ParticleCache', 'SmartVector']:
-        nuke.message('Selected node is not a write node!') #making sure selected node is a valid write node in the list
+    if Nwrite.Class() not in ['Write', 'DeepWrite', 'WriteGeo', 'WriteTank', 'SmartVector']:
+        nuke.message('Selected node is not executable via CMD!') #making sure selected node is executable
     else:
         i = nuke.Panel('Render settings')
         i.addSingleLineInput('first', nuke.root().firstFrame())
