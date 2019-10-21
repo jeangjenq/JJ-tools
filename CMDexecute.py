@@ -2,6 +2,7 @@ import nuke, nukescripts
 import os
 import multiprocessing
 import time
+import platform
 
 def CMDexecute():
     Nwrite = nuke.selectedNode()
@@ -48,7 +49,11 @@ def CMDexecute():
                        + " -F " + str(ret[0]) + '-' + str(ret[1]) \
                        + " " + '"' + nuke.scriptName() + '"' #Quote unquote for spaces in BAT
 
-                startCMD = "start cmd /k " + '"' + args + '"' #Quote unquote in case both paths have spaces
+                #identify OS
+                if platform.system() == "Windows":
+                    startCMD = "start cmd /k " + '"' + args + '"' #Quote unquote in case both paths have spaces
+                if platform.system() == "Linux":
+                    startCMD = "gnome-terminal -x " +  args #Quote unquote in case both paths have spaces
                 os.popen(startCMD)
 
                 #save new version
