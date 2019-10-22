@@ -1,5 +1,5 @@
 '''
-FrameServerStatus v1.0
+FrameServerStatus v1.1
 
 Written by Jeang Jenq Loh
 Last updated 05 May 2019
@@ -10,6 +10,11 @@ Panel to display currently running frame server slaves
 import nuke
 import nukescripts
 from socket import gethostname
+# import PySide for modifying clipboard
+try:
+    from PySide2 import QtWidgets
+except:
+    from PySide import QtGui as QtWidgets
 
 def frameServerCommand():
     from hiero.ui.nuke_bridge.FnNsFrameServer import frameServer
@@ -57,7 +62,7 @@ class FrameServerStatus(nukescripts.PythonPanel):
         self.workersPerSlave = nuke.Int_Knob('workersPerSlave', 'Workers per Slaves')
         # buttons to refresh/copy
         self.refresh = nuke.PyScript_Knob('refresh', 'Refresh')
-        self.showCommand = nuke.PyScript_Knob('showCommand', 'Frame Server Command')
+        self.showCommand = nuke.PyScript_Knob('showCommand', 'Copy workers\' list command')
 
         # add knobs
         for knob in [self.refresh, self.slavesRunning, self.numOfSlaves, self.workersPerSlave, self.div1]:
@@ -89,7 +94,8 @@ class FrameServerStatus(nukescripts.PythonPanel):
 
         elif knob is self.showCommand:
             # copyFScommand()
-            self.hostWorkers.setValue('from hiero.ui.nuke_bridge.FnNsFrameServer import frameServer\nprint [worker.address for worker in frameServer.getStatus(1).workerStatus]')
+            clipboard = QtWidgets.QApplication.clipboard()
+            clipboard.setText('from hiero.ui.nuke_bridge.FnNsFrameServer import frameServer\nprint [worker.address for worker in frameServer.getStatus(1).workerStatus]')
 
 
 # register panel
