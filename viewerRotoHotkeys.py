@@ -1,5 +1,13 @@
 '''
-print nuke.menu('Viewer').findItem('Overlay')
+Written by Jeang Jenq Loh
+Last updated on 5 April 2019
+
+For optimizing roto workflow
+Assign 'Q', 'W', 'Alt+Q', 'Alt+W' as previous/next frame/keyframe/increment to Viewer
+Option to enable/disable hotkeys so to use its original functions
+Now you can keep your hand still in keyboard and tablet while rotoing!
+
+Related docs:
 https://support.foundry.com/hc/en-us/articles/115001297930-Q100354-How-to-activate-a-Nuke-menu-command-using-Python
 https://doc.qt.io/qt-5/qaction.html
 https://learn.foundry.com/nuke/developers/latest/pythonreference/nuke.MenuItem-class.html
@@ -62,5 +70,5 @@ def disableRotoHotkeys():
 
 #Add functions to viewer menu on nuke menu
 viewerTopMenu = nuke.menu('Nuke').findItem('Viewer')
-viewerTopMenu.addCommand('Roto Hotkeys/Enable', "viewerRotoHotkeys.enableRotoHotkeys()", '')
-viewerTopMenu.addCommand('Roto Hotkeys/Disable', "viewerRotoHotkeys.disableRotoHotkeys()", '')
+viewerMenu.addCommand('Roto Hotkeys/Enable', "viewerRotoHotkeys.enableRotoHotkeys()", '')
+viewerMenu.addCommand('Roto Hotkeys/Disable', "viewerRotoHotkeys.disableRotoHotkeys()", '')
