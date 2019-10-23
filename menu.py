@@ -1,4 +1,11 @@
-import nuke
 nuke.pluginAddPath('./ffmpeg_write')
+nuke.pluginAddPath('./read_tools')
+nuke.pluginAddPath('./setProjDir')
 
-JJmenu = nuke.menu('Nodes').addMenu('jj_tools', icon='icon_JJ.png')
+import cmdExecute
+import cmdLaunch
+import disableWithGUI
+import propertiesToggle
+import frameServerStatus
+import refreshViewer
+import openFile
