@@ -3,6 +3,7 @@ Written by Jeang Jenq Loh
 Last updated on 5 April 2019
 
 For optimizing roto workflow
+Disabled up/down arrow hotkeys so doesn't accidentally change viewer input
 Assign 'Q', 'W', 'Alt+Q', 'Alt+W' as previous/next frame/keyframe/increment to Viewer
 Option to enable/disable hotkeys so to use its original functions
 Now you can keep your hand still in keyboard and tablet while rotoing!
@@ -16,59 +17,49 @@ https://learn.foundry.com/nuke/developers/latest/pythonreference/nuke.MenuItem-c
 import nuke
 viewerMenu = nuke.menu('Viewer')
 
-#disable up/down arrow hotkeys in viewer
-viewerMenu.findItem('Previous Input (A Side)').setEnabled(False)
-viewerMenu.findItem('Next Input (A Side)').setEnabled(False)
-
 #setting list of items/commands/hotkeys to add and/or remove
 labels = ['Next Frame', 'Previous Frame', 'Next Keyframe or Increment', 'Previous Keyframe or Increment']
 commands = ['nuke.activeViewer().frameControl(+1)', 'nuke.activeViewer().frameControl(-1)', 'nuke.activeViewer().frameControl(+2)', 'nuke.activeViewer().frameControl(-2)']
 hotkeys = ['w', 'q', 'alt+w', 'alt+q']
 conflictingLabels = ['Enable Wipe', 'Overlay', 'Set New ROI'] #original items with conflicting hotkeys
 
-#check if items already exist
-def itemsExist():
-    if viewerMenu.findItem(labels[0]):
-        exist = True
-    else:
-        exist = False
-    return exist
+#disable up/down arrow hotkeys in viewer
+viewerMenu.findItem('Previous Input (A Side)').setEnabled(False)
+viewerMenu.findItem('Next Input (A Side)').setEnabled(False)
+
+#Add commands and functions to viewer menu
+index = 0
+for new in labels:
+    viewerMenu.addCommand(new, commands[index])
+    index += 1
 
 def enableRotoHotkeys():
-    if not itemsExist():
-        print 'rotoHotkeys not detected, adding...'
-        for old in conflictingLabels:
-            viewerMenu.findItem(old).setShortcut('')
-            viewerMenu.findItem(old).setEnabled(False)
-        index = 0
-        for new in labels:
-            viewerMenu.addCommand(new, commands[index], hotkeys[index])
-            index += 1
-    else:
-        for old in conflictingLabels:
-            viewerMenu.findItem(old).setShortcut('')
-            viewerMenu.findItem(old).setEnabled(False)
-        index = 0
-        for new in labels:
-            viewerMenu.findItem(new).setShortcut(hotkeys[index])
-            viewerMenu.findItem(new).setEnabled(True)
-            index += 1
+    for old in conflictingLabels:
+        viewerMenu.findItem(old).setShortcut('')
+        #viewerMenu.findItem(old).setEnabled(False)
+        print 'disabled ' + old + ' hotkey...'
+    index = 0
+    for new in labels:
+        viewerMenu.findItem(new).setShortcut(hotkeys[index])
+        print 'enabled ' + new + ' hotkey...'
+        #viewerMenu.findItem(new).setEnabled(True)
+        index += 1
 
 def disableRotoHotkeys():
-    if itemsExist():
-        print 'rotoHotkeys detected, removing...'
-        for roto in labels:
-            viewerMenu.findItem(roto).setShortcut('')
-            viewerMenu.findItem(roto).setEnabled(False)
-        index = 0
-        for original in conflictingLabels:
-            viewerMenu.findItem(original).setEnabled(True)
-            viewerMenu.findItem(original).setShortcut(hotkeys[index])
-            index += 1
+    for roto in labels:
+        viewerMenu.findItem(roto).setShortcut('')
+        #viewerMenu.findItem(roto).setEnabled(False)
+        print 'cleared ' + roto + ' hotkey...'
+    index = 0
+    for original in conflictingLabels:
+        #viewerMenu.findItem(original).setEnabled(True)
+        viewerMenu.findItem(original).setShortcut(hotkeys[index])
+        print 'enabled ' + original + ' hotkey...'
+        index += 1
 
 
 
 #Add functions to viewer menu on nuke menu
-viewerTopMenu = nuke.menu('Nuke').findItem('Viewer')
-viewerMenu.addCommand('Roto Hotkeys/Enable', "viewerRotoHotkeys.enableRotoHotkeys()", '')
-viewerMenu.addCommand('Roto Hotkeys/Disable', "viewerRotoHotkeys.disableRotoHotkeys()", '')
+viewerSubMenu = nuke.menu('Viewer').addMenu('Roto Hotkeys')
+viewerSubMenu.addCommand('Enable', "viewerRotoHotkeys.enableRotoHotkeys()", '', icon='Roto.png')
+viewerSubMenu.addCommand('Disable', "viewerRotoHotkeys.disableRotoHotkeys()", '')
