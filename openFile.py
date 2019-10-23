@@ -1,17 +1,28 @@
 '''
 openFile written by Jeang Jenq Loh
-Last update on 27 April 2019
+Last update on 22 August 2019
 
 Open selected node's file path, if there's one
 Works with gizmos!
 Create read node from write node
+
+Update August 2019
+Works with Shotgun WriteTank
+Works with SmarVector
 '''
 
 import platform
 import os
 import subprocess
 import nuke
-import nukescripts
+
+def sgtk_write_path():
+    try:
+        from PySide2 import QtWidgets
+    except:
+        from PySide import QtGui as QtWidgets
+    path = QtWidgets.QApplication.clipboard().text()
+    return path
 
 #Open path's folder
 def open_folder(path):
@@ -28,6 +39,9 @@ def open_folder(path):
 def open_read_file():
     read_path = []
     for node in nuke.selectedNodes():
+        if node.Class() == 'WriteTank':
+            node['tk_copy_path'].execute()
+            read_path.append(os.path.dirname(sgtk_write_path()))
         for knob in node.knobs():
             current_knob = node[knob]
             if current_knob.Class() == 'File_Knob':
@@ -44,15 +58,16 @@ def open_read_file():
 
 #Create read node from write node
 def read_from_write():
+    compatibleClass = ['Write', 'WriteTank', 'SmartVector']
     selected = nuke.selectedNodes()
     writeNodes = []
     for node in selected:
-        if node.Class() == 'Write':
+        if node.Class() in compatibleClass:
             writeNodes.append(node)
         else:
             hasWrite = False
             for inNode in nuke.allNodes(group=node):
-                if inNode.Class() == 'Write':
+                if inNode.Class() in compatibleClass:
                     hasWrite = True
             if hasWrite:
                 writeNodes.append(node)
@@ -63,7 +78,7 @@ def read_from_write():
         writeList = []
         for n in writeNodes:
             writeValues = []
-            if n.Class() == 'Write':
+            if n.Class() in compatibleClass:
                 writeValues.append(n)
                 writeValues.append(n.xpos())
                 writeValues.append(n.ypos())
@@ -77,19 +92,29 @@ def read_from_write():
                         writeList.append(writeValues)
 
         for write in writeList:
-            if write[0]["use_limit"].value() is True:
-                first_frame = write[0]["first"].value()
-                last_frame = write[0]["last"].value()
+            if write[0].Class() == 'WriteTank':
+                write[0]['tk_copy_path'].execute()
+                read_path = sgtk_write_path()
             else:
-                first_frame = nuke.Root()["first_frame"].value()
-                last_frame = nuke.Root()["last_frame"].value()
+                read_path = nuke.filename(write[0])
+
+            if write[0].Class() == 'SmartVector':
+                first_frame = write[0]['file.first_frame'].value()
+                last_frame = write[0]['file.last_frame'].value()
+            else:
+                if write[0]["use_limit"].value() is True:
+                    first_frame = write[0]["first"].value()
+                    last_frame = write[0]["last"].value()
+                else:
+                    first_frame = nuke.Root()["first_frame"].value()
+                    last_frame = nuke.Root()["last_frame"].value()
 
             writeNode = nuke.nodes.Read(
-                file=nuke.filename(write[0]),
+                file=read_path,
                 first=first_frame,
                 last=last_frame,
-                origfirst=nuke.Root()["first_frame"].value(),
-                origlast=nuke.Root()["last_frame"].value())
+                origfirst=first_frame,
+                origlast=last_frame)
             writeNode.setXpos(write[1]+100)
             writeNode.setYpos(write[2])
 
