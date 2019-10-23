@@ -1,4 +1,4 @@
-version = 2.0
+version = 2.1
 '''
 propertiesToggle
 
@@ -64,7 +64,7 @@ def toggleInside():
             show = nukescripts.PythonPanel.showModalDialog(self)
             if show:
                 nameInRoot = nuke.selectedNode().name() + "." + self.nodeList.value()
-                showToggle([nuke.toNode(nameInRoot)])
+                nuke.toNode(nameInRoot).showControlPanel(forceFloat=True)
 
     # If selected node is not a group/gizmo, show node's properties instead
     if 'gizmo_file' in nuke.selectedNode().knobs() or nuke.selectedNode().Class() == 'Group':
@@ -77,6 +77,7 @@ def toggleInside():
 def close():
     nuke.root().hideControlPanel()
     [node.hideControlPanel() for node in nuke.allNodes(recurseGroups=True)]
+
 
 # Add to menu and assign shortcut key
 propertiesMenu = nuke.menu('Nuke').findItem('Edit/Node').addMenu('Properties')
