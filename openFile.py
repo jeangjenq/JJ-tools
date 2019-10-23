@@ -6,9 +6,12 @@ Open selected node's file path, if there's one
 Works with gizmos!
 Create read node from write node
 
+Update 15 October 2019
+    open_read_file() now works with NIM write gizmo
+
 Update August 2019
-Works with Shotgun WriteTank
-Works with SmarVector
+    Works with Shotgun WriteTank
+    Works with SmarVector
 '''
 
 import platform
@@ -23,6 +26,13 @@ def sgtk_write_path():
         from PySide import QtGui as QtWidgets
     path = QtWidgets.QApplication.clipboard().text()
     return path
+
+def gather_path(node):
+    for knob in node.knobs():
+        current_knob = node[knob]
+        if current_knob.Class() == 'File_Knob':
+            if current_knob.evaluate() is not None:
+                return current_knob.evaluate()
 
 #Open path's folder
 def open_folder(path):
@@ -39,22 +49,30 @@ def open_folder(path):
 def open_read_file():
     read_path = []
     for node in nuke.selectedNodes():
+        # Execute copy path knob if node is ShotgunWriteTank
         if node.Class() == 'WriteTank':
             node['tk_copy_path'].execute()
-            read_path.append(os.path.dirname(sgtk_write_path()))
-        for knob in node.knobs():
-            current_knob = node[knob]
-            if current_knob.Class() == 'File_Knob':
-                if current_knob.evaluate() is not None:
-                    if os.path.dirname(current_knob.evaluate()) not in read_path:
-                        read_path.append(os.path.dirname(current_knob.evaluate()))
-    if len(read_path) > 4:
-        if nuke.ask('About to open ' + str(len(read_path)) + " paths, continue?"):
+            if os.path.dirname(sgtk_write_path()) not in read_path:
+                read_path.append(os.path.dirname(sgtk_write_path()))
+        # If node is gizmo, look for file paths within
+        elif 'gizmo_file' in node.knobs():
+            for inNode in nuke.allNodes(group=node):
+                if gather_path(inNode) is not None:
+                    if os.path.dirname(gather_path(inNode)) not in read_path:
+                        read_path.append(os.path.dirname(gather_path(inNode)))
+        # Else just look for file knob
+        else:
+            if os.path.dirname(gather_path(node)) not in read_path:
+                read_path.append(os.path.dirname(gather_path(node)))
+
+    if read_path is not None:
+        if len(read_path) > 4:
+            if nuke.ask('About to open ' + str(len(read_path)) + " paths, continue?"):
+                for path in read_path:
+                    open_folder(path)
+        else:
             for path in read_path:
                 open_folder(path)
-    else:
-        for path in read_path:
-            open_folder(path)
 
 #Create read node from write node
 def read_from_write():
