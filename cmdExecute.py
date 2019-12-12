@@ -52,7 +52,7 @@ def cmdExecute():
         thds += str(n) + " "
 
     #Check if selected node is executable
-    if Nwrite.Class() not in ['Write', 'DeepWrite', 'WriteGeo', 'WriteTank', 'SmartVector']:
+    if Nwrite.Class() not in ['Write', 'DeepWrite', 'WriteGeo', 'WriteTank', 'SmartVector', 'WriteNIM_EXR']:
         nuke.message('Selected node is not executable via CMD!') #making sure selected node is executable
     else:
         i = nuke.Panel('cmdExecute v1.4: Render settings')
