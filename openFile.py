@@ -12,6 +12,9 @@ Update 15 October 2019
 Update August 2019
     Works with Shotgun WriteTank
     Works with SmarVector
+
+Update September 2020
+    Added "Open localization folder" in "Cache" menu
 '''
 
 import platform
@@ -146,3 +149,4 @@ def open_script_folder():
 nuke.menu('Nuke').findItem('Edit/Node').addCommand('Open node\'s folder', 'openFile.open_read_file()', 'e')
 nuke.menu('Nuke').findItem('Edit/Node').addCommand('Create read from write', 'openFile.read_from_write()', '+r')
 nuke.menu('Nuke').findItem('File').addCommand('Open nuke script folder', 'openFile.open_script_folder()', '+o')
+nuke.menu('Nuke').findItem('Cache').addCommand('Open localization folder', 'openFile.open_folder(nuke.tcl("getenv NUKE_TEMP_DIR"))', '')
