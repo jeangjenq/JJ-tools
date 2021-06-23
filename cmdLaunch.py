@@ -28,8 +28,10 @@ def cmdLaunch(XS):
 
     defineNuke = '"' + nuke.env["ExecutablePath"] + '"'
     if XS == 1:
-        defineNuke += " --nukex"
+        defineNuke += " --nukeassist"
     elif XS == 2:
+        defineNuke += " --nukex"
+    elif XS == 3:
         defineNuke += " --studio"
     else:
         pass
@@ -45,5 +47,6 @@ def cmdLaunch(XS):
 
 nodeMenu = nuke.menu('Nuke').findItem('File')
 nodeMenu.addCommand('Restart with CMD Terminal/Nuke', 'cmdLaunch.cmdLaunch(0)')
-nodeMenu.addCommand('Restart with CMD Terminal/NukeX', 'cmdLaunch.cmdLaunch(1)')
-nodeMenu.addCommand('Restart with CMD Terminal/Studio', 'cmdLaunch.cmdLaunch(2)')
+nodeMenu.addCommand('Restart with CMD Terminal/NukeAssist', 'cmdLaunch.cmdLaunch(1)')
+nodeMenu.addCommand('Restart with CMD Terminal/NukeX', 'cmdLaunch.cmdLaunch(2)')
+nodeMenu.addCommand('Restart with CMD Terminal/Studio', 'cmdLaunch.cmdLaunch(3)')
