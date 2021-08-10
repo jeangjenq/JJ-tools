@@ -52,7 +52,7 @@ def open_folder(path):
 
 def read_range_update(node):
     orig_file = nuke.filename(node)
-    file_base = os.path.basename(orig_file).split(".").[0]
+    file_base = os.path.basename(orig_file).split(".")[0]
     file_dir = os.path.dirname(orig_file)
     for seq in nuke.getFileNameList(file_dir):
         if file_base in seq:
