@@ -1,6 +1,6 @@
 '''
 openFile written by Jeang Jenq Loh
-Last update on 22 August 2019
+Last update on 10 August 2021
 
 Open selected node's file path, if there's one
 Works with gizmos!
@@ -39,6 +39,8 @@ def gather_path(node):
 
 #Open path's folder
 def open_folder(path):
+    if not os.path.exists(os.path.abspath(path)):
+        path = os.path.dirname(path)
     if platform.system() == "Windows":
         os.startfile(os.path.abspath(path))
     elif platform.system() == "Darwin":
@@ -47,6 +49,21 @@ def open_folder(path):
         subprocess.check_call(["xdg-open", path])
     else:
         nuke.message("Unsupported OS")
+
+def read_range_update(node):
+    orig_file = nuke.filename(node)
+    file_base = os.path.basename(orig_file).split(".").[0]
+    file_dir = os.path.dirname(orig_file)
+    for seq in nuke.getFileNameList(file_dir):
+        if file_base in seq:
+            frames = seq.split(" ")[-1].split("-")
+            first = int(frames[0])
+            last = int(frames[1])
+            break
+    node['first'].setValue(first)
+    node['origfirst'].setValue(first)
+    node['last'].setValue(last)
+    node['origlast'].setValue(last)
 
 #Open selected node's folder
 def open_read_file():
@@ -135,9 +152,14 @@ def read_from_write():
                 first=first_frame,
                 last=last_frame,
                 origfirst=first_frame,
-                origlast=last_frame)
+                origlast=last_frame,
+                colorspace=int(write[0]['colorspace'].getValue()))
             writeNode.setXpos(write[1]+100)
             writeNode.setYpos(write[2])
+            try:
+                read_range_update(writeNode)
+            except TypeError:
+                pass
 
 def open_script_folder():
     script = nuke.root()['name'].value()
@@ -148,7 +170,7 @@ def open_script_folder():
 
 def open_localization_folder():
     localize_pref = nuke.toNode('preferences')['localCachePath'].value()
-    open_folder(nuke.tcl("return " + localize_pref))
+    open_folder(nuke.tcl("return %s" % localize_pref))
 
 nuke.menu('Nuke').findItem('Edit/Node').addCommand('Open node\'s folder', 'openFile.open_read_file()', 'e')
 nuke.menu('Nuke').findItem('Edit/Node').addCommand('Create read from write', 'openFile.read_from_write()', '+r')
