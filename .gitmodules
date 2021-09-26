@@ -7,3 +7,6 @@
 [submodule "read_tools"]
 	path = read_tools
 	url = https://github.com/jeangjenq/read_tools.git
+[submodule "LensKernelFFT"]
+	path = LensKernelFFT
+	url = https://github.com/jeangjenq/LensKernelFFT.git
