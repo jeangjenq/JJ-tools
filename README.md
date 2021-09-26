@@ -6,6 +6,9 @@ Available on [Nukepedia](http://www.nukepedia.com/gizmos/image/ffmpeg_write)
 
 A custom node that launches ffmpeg and convert sequences.
 
+## [LensKernelFFT](https://github.com/jeangjenq/LensKernelFFT)
+[LensKernelFFT] created by Bob Roesler. I made some slight QoL improvements.
+
 ## [read_tools](https://github.com/jeangjenq/read_tools)
 Available on [Nukepedia](http://www.nukepedia.com/python/misc/read_tools)
 
