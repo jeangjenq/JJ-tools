@@ -168,6 +168,10 @@ def open_script_folder():
     else:
         nuke.message("Nuke script not saved")
 
+def open_dotnuke_folder():
+    home = os.environ['HOME']
+    open_folder(os.path.join(home, ".nuke"))
+
 def open_localization_folder():
     localize_pref = nuke.toNode('preferences')['localCachePath'].value()
     open_folder(nuke.tcl("return %s" % localize_pref))
@@ -175,4 +179,5 @@ def open_localization_folder():
 nuke.menu('Nuke').findItem('Edit/Node').addCommand('Open node\'s folder', 'openFile.open_read_file()', 'e')
 nuke.menu('Nuke').findItem('Edit/Node').addCommand('Create read from write', 'openFile.read_from_write()', '+r')
 nuke.menu('Nuke').findItem('File').addCommand('Open nuke script folder', 'openFile.open_script_folder()', '+o')
+nuke.menu('Nuke').findItem('File').addCommand('Open .nuke folder', 'openFile.open_dotnuke_folder()', '+d')
 nuke.menu('Nuke').findItem('Cache').addCommand('Open localization folder', 'openFile.open_localization_folder()', '')
