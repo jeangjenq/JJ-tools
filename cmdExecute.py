@@ -90,9 +90,9 @@ def cmdExecute():
                 if platform.system() == "Linux":
                     startCMD = findTerminal() + " -e " + args + ' && read line'#Quote unquote in case both paths have spaces
                 os.popen(startCMD)
-                print "Sending command..."
-                print startCMD
-                print "Command sent!"
+                print("Sending command...")
+                print(startCMD)
+                print("Command sent!")
 
                 #save new version
                 if sav:

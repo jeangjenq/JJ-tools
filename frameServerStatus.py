@@ -72,7 +72,7 @@ class FrameServerStatus(nukescripts.PythonPanel):
 
     def knobChanged(self, knob):
         if knob is self.refresh:
-            print knob.name()
+            print(knob.name())
             slavesWorkers = '\n'.join(frameServerWorkers()[1])
             hostWorkers = '\n'.join(frameServerWorkers()[0])
             slavesRunning = ', '.join(frameServerWorkers()[3])
