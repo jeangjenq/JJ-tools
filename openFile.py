@@ -6,6 +6,10 @@ Open selected node's file path, if there's one
 Works with gizmos!
 Create read node from write node
 
+Update 23 May 2022
+    use fromUserText instead of setValue to creat read node
+    removed redundant function to get framerange
+
 Update 15 October 2019
     open_read_file() now works with NIM write gizmo
 
@@ -21,6 +25,7 @@ import platform
 import os
 import subprocess
 import nuke
+from re import sub
 
 def sgtk_write_path():
     try:
@@ -49,21 +54,6 @@ def open_folder(path):
         subprocess.check_call(["xdg-open", path])
     else:
         nuke.message("Unsupported OS")
-
-def read_range_update(node):
-    orig_file = nuke.filename(node)
-    file_base = os.path.basename(orig_file).split(".")[0]
-    file_dir = os.path.dirname(orig_file)
-    for seq in nuke.getFileNameList(file_dir):
-        if file_base in seq:
-            frames = seq.split(" ")[-1].split("-")
-            first = int(frames[0])
-            last = int(frames[1])
-            break
-    node['first'].setValue(first)
-    node['origfirst'].setValue(first)
-    node['last'].setValue(last)
-    node['origlast'].setValue(last)
 
 #Open selected node's folder
 def open_read_file():
@@ -147,19 +137,16 @@ def read_from_write():
                     first_frame = nuke.Root()["first_frame"].value()
                     last_frame = nuke.Root()["last_frame"].value()
 
-            writeNode = nuke.nodes.Read(
-                file=read_path,
-                first=first_frame,
-                last=last_frame,
-                origfirst=first_frame,
-                origlast=last_frame,
-                colorspace=int(write[0]['colorspace'].getValue()))
-            writeNode.setXpos(write[1]+100)
-            writeNode.setYpos(write[2])
-            try:
-                read_range_update(writeNode)
-            except TypeError:
-                pass
+            read_dir = os.path.dirname(read_path)
+            read_basename = sub(r"%\d+d", r"#" ,os.path.basename(read_path))
+            for name in nuke.getFileNameList(read_dir):
+                if read_basename in name:
+                    read_path = os.path.join(read_dir, name).replace("\\", "/")
+            readNode = nuke.createNode('Read')
+            readNode['file'].fromUserText(read_path)
+            readNode['colorspace'].setValue(int(write[0]['colorspace'].getValue()))
+            readNode.setXpos(write[1]+100)
+            readNode.setYpos(write[2])
 
 def open_script_folder():
     script = nuke.root()['name'].value()
