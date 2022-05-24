@@ -138,7 +138,7 @@ def read_from_write():
                     last_frame = nuke.Root()["last_frame"].value()
 
             read_dir = os.path.dirname(read_path)
-            read_basename = sub(r"%\d+d", r"#" ,os.path.basename(read_path))
+            read_basename = sub(r"\%\d+[dD]", r"#" ,os.path.basename(read_path))
             for name in nuke.getFileNameList(read_dir):
                 if read_basename in name:
                     read_path = os.path.join(read_dir, name).replace("\\", "/")
