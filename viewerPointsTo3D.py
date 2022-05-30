@@ -77,4 +77,4 @@ viewer_menu = nuke.menu("Viewer")
 pt3_menu = viewer_menu.addMenu("PointsTo3D", icon="PointsTo3D.png")
 points = ["A", "B", "C"]
 for index, point in enumerate(points):
-	pt3_menu.addCommand("Set as Point %s" % point, "viewer_pointsTo3D.setPoint(%d, viewer_pointsTo3D.activePointsTo3D())" % index, icon = "PointsTo3D.png")
+	pt3_menu.addCommand("Set as Point %s" % point, "viewerPointsTo3D.setPoint(%d, viewerPointsTo3D.activePointsTo3D())" % index, icon = "PointsTo3D.png")
