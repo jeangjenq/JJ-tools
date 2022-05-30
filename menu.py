@@ -10,3 +10,4 @@ import frameServerStatus
 import refreshViewer
 import openFile
 import viewerRotoHotkeys
+import viewerPointsTo3D
