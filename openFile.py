@@ -1,12 +1,11 @@
 '''
 openFile written by Jeang Jenq Loh
-Last update on 10 August 2021
 
 Open selected node's file path, if there's one
 Works with gizmos!
 Create read node from write node
 
-Update 23 May 2022
+Update 13 June 2022
     use fromUserText instead of setValue to creat read node
     removed redundant function to get framerange
 
@@ -138,7 +137,9 @@ def read_from_write():
                     last_frame = nuke.Root()["last_frame"].value()
 
             read_dir = os.path.dirname(read_path)
-            read_basename = sub(r"\%\d+[dD]", r"#" ,os.path.basename(read_path))
+            read_basename = os.path.basename(read_path)
+            for format in [r"\%\d+[dD]", r"\#+"]:
+                read_basename = sub(format, r"#", read_basename)
             for name in nuke.getFileNameList(read_dir):
                 if read_basename in name:
                     read_path = os.path.join(read_dir, name).replace("\\", "/")
