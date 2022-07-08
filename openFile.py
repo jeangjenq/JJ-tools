@@ -5,6 +5,9 @@ Open selected node's file path, if there's one
 Works with gizmos!
 Create read node from write node
 
+Update July 2022 by Harrison Malone
+    now compatible with DeepWrite/DeepRead
+
 Update 13 June 2022
     use fromUserText instead of setValue to creat read node
     removed redundant function to get framerange
@@ -85,7 +88,7 @@ def open_read_file():
 
 #Create read node from write node
 def read_from_write():
-    compatibleClass = ['Write', 'WriteTank', 'SmartVector']
+    compatibleClass = ['Write', 'WriteTank', 'SmartVector', 'DeepWrite']
     selected = nuke.selectedNodes()
     writeNodes = []
     for node in selected:
@@ -143,9 +146,12 @@ def read_from_write():
             for name in nuke.getFileNameList(read_dir):
                 if read_basename in name:
                     read_path = os.path.join(read_dir, name).replace("\\", "/")
-            readNode = nuke.createNode('Read')
+            if write[0].Class() == "DeepWrite":
+                readNode = nuke.createNode('DeepRead')
+            else:
+                readNode = nuke.createNode('Read')
+                readNode['colorspace'].setValue(int(write[0]['colorspace'].getValue()))
             readNode['file'].fromUserText(read_path)
-            readNode['colorspace'].setValue(int(write[0]['colorspace'].getValue()))
             readNode.setXpos(write[1]+100)
             readNode.setYpos(write[2])
 
