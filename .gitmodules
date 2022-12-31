@@ -1,12 +1,12 @@
 [submodule "ffmpeg_write"]
 	path = ffmpeg_write
-	url = https://github.com/jeangjenq/ffmpeg_write.git
+	url = git@github.com:jeangjenq/ffmpeg_write.git
 [submodule "setProjDir"]
 	path = setProjDir
-	url = https://github.com/jeangjenq/setProjDir.git
+	url = git@github.com:jeangjenq/setProjDir.git
 [submodule "read_tools"]
 	path = read_tools
-	url = https://github.com/jeangjenq/read_tools.git
+	url = git@github.com:jeangjenq/read_tools.git
 [submodule "LensKernelFFT"]
 	path = LensKernelFFT
-	url = https://github.com/jeangjenq/LensKernelFFT.git
+	url = git@github.com:jeangjenq/LensKernelFFT.git
