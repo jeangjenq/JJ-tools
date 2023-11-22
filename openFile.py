@@ -67,7 +67,7 @@ def open_read_file():
             if os.path.dirname(sgtk_write_path()) not in read_path:
                 read_path.append(os.path.dirname(sgtk_write_path()))
         # If node is gizmo, look for file paths within
-        elif 'gizmo_file' in node.knobs():
+        elif 'gizmo_file' in node.knobs() or node.Class() == "Group":
             for inNode in nuke.allNodes(group=node):
                 if gather_path(inNode) is not None:
                     if os.path.dirname(gather_path(inNode)) not in read_path:
@@ -115,7 +115,7 @@ def read_from_write():
                 writeList.append(writeValues)
             else:
                 for inGroup in nuke.allNodes(group=n):
-                    if inGroup.Class() == 'Write':
+                    if inGroup.Class() in compatibleClass:
                         writeValues.append(inGroup)
                         writeValues.append(n.xpos())
                         writeValues.append(n.ypos())
